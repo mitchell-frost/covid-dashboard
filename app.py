@@ -455,3 +455,99 @@ st.markdown("""
     Social Media Analytics of COVID-19 Discourse · MS5131 Major Business Analytics Project ·
     Bhawna Patnaik & Aditya Bhilare · 1MBY1 MSc Business Analytics
 </div>""", unsafe_allow_html=True)
+
+with tab4:
+    st.markdown('<div class="section-header">Dominant COVID-19 Terms — Interactive Word Bubbles</div>',
+                unsafe_allow_html=True)
+    
+    period_words = {
+        'Apr-Jun 2020': {
+            'covid19': 50, 'lockdown': 30, 'mask': 28, 'death': 25,
+            'school': 22, 'health': 20, 'food': 18, 'mental': 16,
+            'teacher': 15, 'protest': 14, 'faith': 12, 'economy': 11,
+            'hospital': 18, 'reopen': 16, 'quarantine': 14
+        },
+        'Aug-Sep 2020': {
+            'covid19': 45, 'test': 48, 'trump': 40, 'positive': 35,
+            'vaccine': 38, 'biden': 28, 'death': 25, 'canada': 22,
+            'election': 20, 'mask': 26, 'china': 18, 'remdesivir': 15,
+            'contact': 16, 'trace': 14, 'wuhan': 12
+        },
+        'Apr-Jun 2021': {
+            'vaccine': 70, 'vaccination': 65, 'covid19': 45, 'pfizer': 38,
+            'moderna': 35, 'dose': 32, 'delta': 25, 'variant': 22,
+            'lockdown': 20, 'boris': 15, 'johnson': 14, 'case': 18,
+            'death': 16, 'government': 14, 'ease': 12
+        }
+    }
+    
+    colors = {
+        'Apr-Jun 2020': '#4ECDC4',
+        'Aug-Sep 2020': '#E9C46A', 
+        'Apr-Jun 2021': '#FF6B6B'
+    }
+    
+    selected = st.radio(
+        "Select time period:",
+        list(period_words.keys()),
+        horizontal=True
+    )
+    
+    words = period_words[selected]
+    np.random.seed(42)
+    
+    # Generate bubble positions
+    n = len(words)
+    labels = list(words.keys())
+    sizes = list(words.values())
+    
+    # Spiral layout
+    angles = np.linspace(0, 4*np.pi, n)
+    radii = np.linspace(0.1, 1.0, n)
+    x = radii * np.cos(angles) + np.random.uniform(-0.1, 0.1, n)
+    y = radii * np.sin(angles) + np.random.uniform(-0.1, 0.1, n)
+    
+    fig_wc = go.Figure()
+    
+    fig_wc.add_trace(go.Scatter(
+        x=x, y=y,
+        mode='text+markers',
+        text=labels,
+        marker=dict(
+            size=[s*1.5 for s in sizes],
+            color=colors[selected],
+            opacity=0.15,
+            line=dict(width=0)
+        ),
+        textfont=dict(
+            size=[max(10, s//2) for s in sizes],
+            color=colors[selected]
+        ),
+        hovertemplate='<b>%{text}</b><br>Relative frequency: %{marker.size}<extra></extra>'
+    ))
+    
+    fig_wc.update_layout(
+        template='plotly_dark',
+        plot_bgcolor='#1E2130',
+        paper_bgcolor='#1E2130',
+        height=500,
+        showlegend=False,
+        xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+        yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+        margin=dict(t=20, b=20)
+    )
+    
+    st.plotly_chart(fig_wc, use_container_width=True)
+    
+    # Narrative below
+    narratives = {
+        'Apr-Jun 2020': '🌱 Early pandemic — discourse scattered across masks, schools, mental health, food and faith. No single dominant narrative.',
+        'Aug-Sep 2020': '⚡ Mid pandemic — testing surges, Trump/Biden election heats up, vaccine trials announced. Discourse sharpens around specific events.',
+        'Apr-Jun 2021': '💉 Late period — vaccine completely dominates. The magnifying glass has zoomed in on a single topic. Pfizer, Moderna, dose, delta — one narrative.'
+    }
+    
+    st.markdown(f"""
+    <div style="background:#1E2130; border-radius:10px; padding:16px 20px;
+                border-left: 4px solid {colors[selected]}; margin-top:10px;">
+        <span style="color:{colors[selected]}; font-size:1rem">{narratives[selected]}</span>
+    </div>""", unsafe_allow_html=True)
