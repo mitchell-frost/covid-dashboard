@@ -210,9 +210,9 @@ with tab2:
             gauge={"axis":{"range":[0,40],"tickcolor":"white"},
                    "bar":{"color":"#E63946"},
                    "bgcolor":"#1E2130",
-                   "steps":[{"range":[0,10],"color":"#2A9D8F22"},
-                             {"range":[10,25],"color":"#E9C46A22"},
-                             {"range":[25,40],"color":"#E6394622"}]},
+                   "steps":[{"range":[0,10],"color":"rgba(42,157,143,0.15)"},
+                             {"range":[10,25],"color":"rgba(233,196,106,0.15)"},
+                             {"range":[25,40],"color":"rgba(230,57,70,0.15)"}]},
             title={"text":"of 15,000 tweets sampled","font":{"color":"#888","size":11}}
         ))
         fig_g.update_layout(paper_bgcolor="#1E2130", font={"color":"white"},
