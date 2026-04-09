@@ -146,94 +146,163 @@ with tab1:
 # ══════════════════════════════════════════════════════════════════
 # TAB 2
 # ══════════════════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════════
+# TAB 2
+# ══════════════════════════════════════════════════════════════════
 with tab2:
-    st.markdown('<div class="section-header">ABSA Temporal Trajectory</div>', unsafe_allow_html=True)
-    absa = pd.DataFrame({
-        "Aspect":["Lockdown","Vaccines","Government","Healthcare",
-                  "Economy","Mental Health","Education","Misinformation"],
-        "Apr-Jun 2020":[-0.051,0.022,-0.054,-0.013,-0.000,-0.280,0.063,-0.338],
-        "Aug-Sep 2020":[-0.140,0.022,-0.045,-0.018, 0.024,-0.273,0.030,-0.299],
-        "Apr-Jun 2021":[-0.134,0.050,-0.015,-0.009, 0.054,-0.270,0.043,-0.288]
-    })
-    heat = absa.set_index("Aspect")[["Apr-Jun 2020","Aug-Sep 2020","Apr-Jun 2021"]]
-    fig_h = px.imshow(heat, color_continuous_scale="RdYlGn",
-                      zmin=-0.4, zmax=0.4, text_auto=".3f",
-                      template="plotly_dark", aspect="auto")
-    fig_h.update_layout(plot_bgcolor="#1E2130", paper_bgcolor="#1E2130",
-                        height=350, margin=dict(t=10,b=10))
-    st.plotly_chart(fig_h, use_container_width=True)
+    st.markdown('<div class="section-header">ABSA Temporal Heatmap — Click cells to explore</div>', unsafe_allow_html=True)
 
-    cl, cr = st.columns([1,1])
-    with cl:
-        st.markdown('<div class="section-header">Sentiment Trajectory</div>', unsafe_allow_html=True)
-        highlight = {"Lockdown":"#E63946","Vaccines":"#2A9D8F",
-                     "Mental Health":"#9B59B6","Misinformation":"#E67E22",
-                     "Education":"#27AE60"}
-        fig_t = go.Figure()
-        periods = ["Apr-Jun 2020","Aug-Sep 2020","Apr-Jun 2021"]
-        for _,row in absa.iterrows():
-            if row["Aspect"] in highlight:
-                fig_t.add_trace(go.Scatter(
-                    x=periods,
-                    y=[row["Apr-Jun 2020"],row["Aug-Sep 2020"],row["Apr-Jun 2021"]],
-                    mode="lines+markers", name=row["Aspect"],
-                    line=dict(color=highlight[row["Aspect"]],width=2.5),
-                    marker=dict(size=8)))
-        fig_t.add_hline(y=0.05, line_dash="dash", line_color="#2A9D8F", opacity=0.4)
-        fig_t.add_hline(y=-0.05, line_dash="dash", line_color="#E63946", opacity=0.4)
-        fig_t.update_layout(template="plotly_dark", plot_bgcolor="#1E2130",
-            paper_bgcolor="#1E2130", height=320,
-            margin=dict(t=10,b=10), legend=dict(bgcolor="#1E2130",font=dict(size=10)))
-        st.plotly_chart(fig_t, use_container_width=True)
+    absa_data = {
+        'Aspect':['Lockdown & Quarantine','Vaccines & Treatment','Government Response',
+                  'Healthcare System','Economy & Jobs','Mental Health','Education','Misinformation'],
+        'Apr-Jun 2020':[-0.051,0.022,-0.054,-0.013,-0.000,-0.280,0.063,-0.338],
+        'Aug-Sep 2020':[-0.140,0.022,-0.045,-0.018,0.024,-0.273,0.030,-0.299],
+        'Apr-Jun 2021':[-0.134,0.050,-0.015,-0.009,0.054,-0.270,0.043,-0.288]
+    }
+    absa_df = pd.DataFrame(absa_data)
+    heat_data = absa_df.set_index('Aspect')[['Apr-Jun 2020','Aug-Sep 2020','Apr-Jun 2021']]
 
-    with cr:
-        st.markdown('<div class="section-header">RoBERTa Emotions — Aug-Sep 2020</div>', unsafe_allow_html=True)
-        emo = pd.DataFrame({
-            "Emotion":["Sadness","Optimism","Joy","Anger"],
-            "Count":[6030,4536,3115,1319],
-            "Pct":["40.2%","30.2%","20.8%","8.8%"]
+    fig_heat = px.imshow(
+        heat_data, color_continuous_scale='RdYlGn',
+        zmin=-0.4, zmax=0.4, text_auto='.3f',
+        template='plotly_dark', aspect='auto'
+    )
+    fig_heat.update_layout(
+        plot_bgcolor='#1E2130', paper_bgcolor='#1E2130',
+        margin=dict(t=20,b=20), height=380,
+        coloraxis_colorbar=dict(title='Avg Compound Score'),
+        hoverlabel=dict(bgcolor='#1E2130', font_size=13)
+    )
+    fig_heat.update_traces(
+        hovertemplate='<b>%{y}</b><br>Period: %{x}<br>Score: %{z:.3f}<extra></extra>',
+        textfont_size=12
+    )
+    st.plotly_chart(fig_heat, use_container_width=True)
+
+    col_l, col_r = st.columns(2)
+
+    with col_l:
+        st.markdown('<div class="section-header">3D Sentiment Trajectory</div>', unsafe_allow_html=True)
+        periods_idx = [0, 1, 2]
+        period_labels = ['Apr-Jun 2020','Aug-Sep 2020','Apr-Jun 2021']
+        colors_3d = ['#E63946','#2A9D8F','#9B59B6','#3498DB','#27AE60','#E74C3C','#F39C12','#E67E22']
+
+        fig_3d = go.Figure()
+        for i, row in absa_df.iterrows():
+            vals = [row['Apr-Jun 2020'], row['Aug-Sep 2020'], row['Apr-Jun 2021']]
+            fig_3d.add_trace(go.Scatter3d(
+                x=periods_idx,
+                y=[i]*3,
+                z=vals,
+                mode='lines+markers',
+                name=row['Aspect'],
+                line=dict(color=colors_3d[i % len(colors_3d)], width=4),
+                marker=dict(size=6, color=colors_3d[i % len(colors_3d)]),
+                hovertemplate='<b>%{text}</b><br>Score: %{z:.3f}<extra></extra>',
+                text=[row['Aspect']]*3
+            ))
+
+        fig_3d.add_trace(go.Surface(
+            x=[[0,1,2],[0,1,2]],
+            y=[[-0.5,-0.5],[ 7.5, 7.5]],
+            z=[[0,0],[0,0]],
+            opacity=0.15,
+            colorscale=[[0,'#888888'],[1,'#888888']],
+            showscale=False,
+            hoverinfo='skip'
+        ))
+
+        fig_3d.update_layout(
+            template='plotly_dark',
+            paper_bgcolor='#1E2130',
+            scene=dict(
+                xaxis=dict(tickvals=[0,1,2], ticktext=period_labels,
+                           title='Time Period', gridcolor='#333', backgroundcolor='#1E2130'),
+                yaxis=dict(tickvals=list(range(8)),
+                           ticktext=absa_df['Aspect'].tolist(),
+                           title='Aspect', gridcolor='#333', backgroundcolor='#1E2130'),
+                zaxis=dict(title='Sentiment Score', gridcolor='#333', backgroundcolor='#1E2130',
+                           range=[-0.4, 0.15]),
+                bgcolor='#1E2130',
+                camera=dict(eye=dict(x=1.8, y=-1.8, z=1.2))
+            ),
+            legend=dict(bgcolor='#1E2130', font=dict(size=9)),
+            margin=dict(t=20,b=20),
+            height=420
+        )
+        st.plotly_chart(fig_3d, use_container_width=True)
+        st.caption("💡 Drag to rotate · Scroll to zoom · Click legend to toggle aspects")
+
+    with col_r:
+        st.markdown('<div class="section-header">RoBERTa Emotion Analysis — Aug-Sep 2020</div>', unsafe_allow_html=True)
+        emotion_df = pd.DataFrame({
+            'Emotion':['Sadness','Optimism','Joy','Anger'],
+            'Count':[6030,4536,3115,1319],
+            'Pct':[40.2,30.2,20.8,8.8]
         })
-        fig_e = px.bar(emo, x="Emotion", y="Count", color="Emotion",
-            color_discrete_map={"Sadness":"#457B9D","Optimism":"#2A9D8F",
-                                "Joy":"#E9C46A","Anger":"#E63946"},
-            text="Pct", template="plotly_dark")
-        fig_e.update_traces(textposition="outside")
-        fig_e.update_layout(showlegend=False, plot_bgcolor="#1E2130",
-            paper_bgcolor="#1E2130", height=220, margin=dict(t=10,b=10))
-        st.plotly_chart(fig_e, use_container_width=True)
+        fig_emo = px.bar(emotion_df, x='Emotion', y='Count',
+            color='Emotion',
+            color_discrete_map={'Sadness':'#457B9D','Optimism':'#2A9D8F','Joy':'#E9C46A','Anger':'#E63946'},
+            text=emotion_df['Pct'].apply(lambda x: f'{x}%'),
+            template='plotly_dark')
+        fig_emo.update_traces(textposition='outside', textfont_size=13,
+            hovertemplate='<b>%{x}</b><br>Tweets: %{y:,}<extra></extra>')
+        fig_emo.update_layout(showlegend=False, plot_bgcolor='#1E2130',
+            paper_bgcolor='#1E2130', margin=dict(t=20,b=10), height=240)
+        st.plotly_chart(fig_emo, use_container_width=True)
 
-        st.markdown('<div class="section-header">Irony / Sarcasm Rate</div>', unsafe_allow_html=True)
-        fig_g = go.Figure(go.Indicator(
+        st.markdown('<div class="section-header">Sarcasm/Irony Detection Rate</div>', unsafe_allow_html=True)
+        fig_gauge = go.Figure(go.Indicator(
             mode="gauge+number",
             value=20.4,
-            number={"suffix":"%","font":{"size":32,"color":"#E63946"}},
-            gauge={"axis":{"range":[0,40],"tickcolor":"white"},
-                   "bar":{"color":"#E63946"},
-                   "bgcolor":"#1E2130",
-                   "steps":[{"range":[0,10],"color":"rgba(42,157,143,0.15)"},
-                             {"range":[10,25],"color":"rgba(233,196,106,0.15)"},
-                             {"range":[25,40],"color":"rgba(230,57,70,0.15)"}]},
-            title={"text":"of 15,000 tweets sampled","font":{"color":"#888","size":11}}
+            number={'suffix':'%', 'font':{'size':40, 'color':'#E63946'}},
+            gauge={
+                'axis':{'range':[0,40], 'tickcolor':'white'},
+                'bar':{'color':'#E63946', 'thickness':0.3},
+                'bgcolor':'#1E2130',
+                'bordercolor':'#333',
+                'steps':[
+                    {'range':[0,10], 'color':'#1a3a2a'},
+                    {'range':[10,25], 'color':'#3a3a1a'},
+                    {'range':[25,40], 'color':'#3a1a1a'}
+                ],
+                'threshold':{
+                    'line':{'color':'white','width':3},
+                    'thickness':0.75,
+                    'value':20.4
+                }
+            },
+            title={'text':"of tweets are ironic/sarcastic",'font':{'color':'#888','size':12}}
         ))
-        fig_g.update_layout(paper_bgcolor="#1E2130", font={"color":"white"},
-                             height=190, margin=dict(t=30,b=5))
-        st.plotly_chart(fig_g, use_container_width=True)
+        fig_gauge.update_layout(
+            paper_bgcolor='#1E2130', font={'color':'white'},
+            height=220, margin=dict(t=30,b=10)
+        )
+        st.plotly_chart(fig_gauge, use_container_width=True)
 
-    st.markdown('<div class="section-header">Key ABSA Findings</div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div class="finding-box">
+        ⚠️ <b>Why this matters:</b> VADER classifies ironic tweets as <i>positive</i>
+        despite negative intent — 20.4% sarcasm rate means ~1 in 5 tweets
+        is systematically misclassified by lexicon-based approaches.
+        </div>""", unsafe_allow_html=True)
+
+    st.markdown('<div class="section-header">ABSA Key Findings</div>', unsafe_allow_html=True)
     a1,a2,a3,a4 = st.columns(4)
-    for col,(icon,title,desc,color) in zip([a1,a2,a3,a4],[
-        ("😰","Mental Health","Most negative all periods (-0.28)","#9B59B6"),
-        ("🦠","Misinformation","Most negative overall (-0.34)","#E67E22"),
-        ("💉","Vaccines","Improving (+0.02→+0.05)","#2A9D8F"),
-        ("🔒","Lockdown","Worsening (-0.05→-0.14)","#E63946"),
+    for col, (icon,title,desc,color) in zip([a1,a2,a3,a4],[
+        ("😰","Mental Health","Most negative across ALL periods (-0.28)","#9B59B6"),
+        ("🦠","Misinformation","Most negative overall (-0.34 → -0.29)","#E67E22"),
+        ("💉","Vaccines","Steadily improving (+0.02 → +0.05)","#2A9D8F"),
+        ("🔒","Lockdown","Got more negative (-0.05 → -0.14)","#E63946"),
     ]):
         with col:
-            st.markdown(f'''<div style="background:#1E2130;border-radius:10px;
-                padding:14px 10px;border-top:3px solid {color};text-align:center;">
-                <div style="font-size:1.6rem">{icon}</div>
-                <div style="font-weight:700;color:{color};font-size:0.85rem;margin:4px 0">{title}</div>
-                <div style="font-size:0.78rem;color:#AAA">{desc}</div>
-            </div>''', unsafe_allow_html=True)
+            st.markdown(f"""
+            <div style="background:#1E2130;border-radius:10px;padding:16px;
+                        border-top:3px solid {color};text-align:center;">
+                <div style="font-size:1.8rem">{icon}</div>
+                <div style="font-weight:700;color:{color};margin:6px 0">{title}</div>
+                <div style="font-size:0.82rem;color:#AAA">{desc}</div>
+            </div>""", unsafe_allow_html=True)
 
 # ══════════════════════════════════════════════════════════════════
 # TAB 3
