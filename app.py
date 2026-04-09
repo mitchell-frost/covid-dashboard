@@ -59,10 +59,11 @@ st.markdown("# 🦠 COVID-19 Social Media Analytics Dashboard")
 st.markdown("##### Bhawna Patnaik & Aditya Bhilare · MSc Business Analytics · MS5131")
 st.markdown("---")
 
-tab1, tab2, tab3 = st.tabs([
-    "📊 Sentiment & Models",
-    "🔍 ABSA & Emotions",
-    "🗺️ Topic Evolution"
+tab1, tab2, tab3, tab4 = st.tabs([
+    "📊 Sentiment & Model Comparison",
+    "🔍 ABSA & Emotion Analysis",
+    "🗺️ Topic Evolution",
+    "☁️ Word Clouds"
 ])
 
 # ══════════════════════════════════════════════════════════════════
@@ -456,6 +457,9 @@ st.markdown("""
     Bhawna Patnaik & Aditya Bhilare · 1MBY1 MSc Business Analytics
 </div>""", unsafe_allow_html=True)
 
+# ══════════════════════════════════════════════════════════════════
+# TAB 4
+# ══════════════════════════════════════════════════════════════════
 with tab4:
     st.markdown('<div class="section-header">Dominant COVID-19 Terms — Interactive Word Bubbles</div>',
                 unsafe_allow_html=True)
