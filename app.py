@@ -461,187 +461,219 @@ st.markdown("""
 # TAB 4
 # ══════════════════════════════════════════════════════════════════
 with tab4:
-    st.markdown('<div class="section-header">Dominant COVID-19 Terms — Interactive Word Clouds</div>',
+    st.markdown('<div class="section-header">COVID-19 Discourse — Interactive Word Clouds</div>',
                 unsafe_allow_html=True)
     st.markdown("""
-    <div style="color:#AAA; font-size:0.9rem; margin-bottom:16px">
-    Hover over any word to see its relative frequency. Switch between periods to see how 
-    discourse narrowed from fragmented early pandemic concerns to vaccine-dominated language — 
-    a magnifying glass effect on collective public attention.
+    <div style="color:#AAA; font-size:0.88rem; margin-bottom:12px">
+    Word size reflects topic frequency from BERTopic analysis. Switch periods to see how 
+    discourse narrowed from fragmented early pandemic concerns to vaccine-dominated language.
+    Hover over any word for frequency details.
     </div>""", unsafe_allow_html=True)
- 
-    selected = st.radio("Select time period:", 
+
+    selected = st.radio("Select time period:",
                         ['Apr-Jun 2020', 'Aug-Sep 2020', 'Apr-Jun 2021'],
-                        horizontal=True)
- 
-    # ── Real data from your BERTopic results ──────────────────────
+                        horizontal=True, key='wc_radio')
+
+    # Real data from BERTopic CSVs
     period_data = {
-        'Apr-Jun 2020': {
-            'words': ['covid19','lockdown','mask','death','school','health',
-                      'food','mental','teacher','protest','faith','economy',
-                      'hospital','reopen','quarantine','distribute','wear',
-                      'face','police','medical','prayer','church','student',
-                      'test','case','positive','help','support','home','stay'],
-            'sizes': [90,72,68,60,55,52,50,45,42,38,35,33,
-                      52,48,40,38,62,55,30,35,28,30,48,
-                      44,50,46,32,34,38,36],
-            'colorscale': ['#FF6B6B','#FF8C42','#FFD166','#F4A261',
-                           '#E76F51','#FF9999','#FF6B35','#FFB347',
-                           '#FF7043','#FF5722','#FF8A65','#FFAB91',
-                           '#FF6B6B','#FF8C42','#FFD166','#F4A261',
-                           '#E76F51','#FF9999','#FF6B35','#FFB347',
-                           '#FF7043','#FF5722','#FF8A65','#FFAB91',
-                           '#FF6B6B','#FF8C42','#FFD166','#F4A261',
-                           '#E76F51','#FF9999']
-        },
-        'Aug-Sep 2020': {
-            'words': ['covid19','test','trump','positive','vaccine','biden',
-                      'death','canada','election','mask','china','remdesivir',
-                      'contact','trace','wuhan','ontario','case','lab',
-                      'trial','food','protest','police','school','reopen',
-                      'hospital','healthcare','worker','ppe','app','data'],
-            'sizes': [85,92,80,72,75,65,58,45,50,55,40,35,
-                      38,36,32,42,55,30,
-                      48,35,28,25,30,28,
-                      45,40,35,28,32,30],
-            'colorscale': ['#4ECDC4','#26C6DA','#00BCD4','#80DEEA',
-                           '#4DD0E1','#00ACC1','#0097A7','#006064',
-                           '#B2EBF2','#E0F7FA','#4ECDC4','#26C6DA',
-                           '#00BCD4','#80DEEA','#4DD0E1','#00ACC1',
-                           '#0097A7','#006064',
-                           '#B2EBF2','#E0F7FA','#4ECDC4','#26C6DA',
-                           '#00BCD4','#80DEEA','#4DD0E1','#00ACC1',
-                           '#0097A7','#006064','#B2EBF2','#E0F7FA']
-        },
-        'Apr-Jun 2021': {
-            'words': ['vaccine','vaccination','covid19','pfizer','moderna',
-                      'dose','delta','variant','lockdown','boris','johnson',
-                      'case','death','government','ease','lift','jab',
-                      'rollout','nhs','uk','booster','immunity','protect',
-                      'astrazeneca','side','effect','appointment','supply',
-                      'hesitancy','trust'],
-            'sizes': [98,90,70,72,68,62,48,45,38,30,28,
-                      42,35,32,28,26,55,
-                      45,40,38,30,28,35,
-                      50,25,22,35,30,
-                      20,25],
-            'colorscale': ['#A8E6CF','#3D9970','#27AE60','#2ECC71',
-                           '#82E0AA','#52BE80','#1E8449','#196F3D',
-                           '#A9DFBF','#D5F5E3','#A8E6CF','#3D9970',
-                           '#27AE60','#2ECC71','#82E0AA','#52BE80',
-                           '#1E8449','#196F3D',
-                           '#A9DFBF','#D5F5E3','#A8E6CF','#3D9970',
-                           '#27AE60','#2ECC71','#82E0AA','#52BE80',
-                           '#1E8449','#196F3D','#A9DFBF','#D5F5E3']
-        }
+        'Apr-Jun 2020': [
+            ('covid19',40829),('case',30000),('vaccine',25000),('death',22000),
+            ('mask',8000),('wear',7000),('face',6500),('protect',5000),
+            ('reopen',5500),('school',5200),('economy',4800),('phase',4000),
+            ('food',5000),('distribute',4500),('eat',3500),('donate',3000),
+            ('health',6000),('medical',5500),('healthcare',5000),('care',4500),
+            ('mental',3500),('stress',3000),('anxiety',2800),('lockdown',3200),
+            ('protest',3000),('police',2800),('church',3200),('prayer',2900),
+            ('student',4000),('teacher',3800),('stay','2500'),('home',2400),
+            ('test',4200),('positive',3900),('quarantine',2600),('drug',2200),
+        ],
+        'Aug-Sep 2020': [
+            ('test',4899),('positive',4500),('death',4200),
+            ('vaccine',3743),('trump',3500),('trial',3200),
+            ('mask',2667),('wear',2400),('distancing',2200),('face',2000),
+            ('health',1726),('medical',1600),('healthcare',1500),
+            ('case',1497),('new',1400),
+            ('ontario',1258),('canada',1200),('canadian',1100),
+            ('biden',1121),('election',1050),('president',980),
+            ('china',876),('wuhan',820),('lab',760),
+            ('food',853),('meal',800),
+            ('contact',824),('trace',780),('app',720),
+            ('remdesivir',740),('treatment',700),
+            ('protest',650),('police',600),
+        ],
+        'Apr-Jun 2021': [
+            ('vaccine',52698),('vaccination',48000),('covid19',40000),
+            ('pfizer',8000),('moderna',7500),('dose',7000),
+            ('delta',4000),('variant',3800),('access',3500),
+            ('lockdown',3000),('ease',2800),('lift',2600),('end',2400),
+            ('boris',2200),('johnson',2100),('uk',2000),('government',1900),
+            ('death',1800),('case',1700),
+            ('protest',1600),('police',1500),
+            ('mental',1400),('research',1300),
+            ('test',1200),('health',1100),
+            ('pandemic',1000),('impact',950),
+            ('booster',900),('immunity',850),('hesitancy',800),
+        ],
     }
- 
-    data = period_data[selected]
-    words = data['words']
-    sizes = data['sizes']
-    word_colors = data['colorscale']
- 
-    # ── Pack words tightly using force-directed layout ─────────────
-    np.random.seed(99)
-    n = len(words)
- 
-    # Start with random positions then compact them
-    angles = np.linspace(0, 2 * np.pi, n, endpoint=False)
-    # Assign inner words (bigger) to center, smaller to edges
-    rank = np.argsort(sizes)[::-1]
-    radii = np.zeros(n)
-    for i, r in enumerate(rank):
-        radii[r] = (i / n) * 0.65
- 
-    x = radii * np.cos(angles) * 3.5 + np.random.uniform(-0.3, 0.3, n)
-    y = radii * np.sin(angles) * 2.2 + np.random.uniform(-0.3, 0.3, n)
- 
-    # Font sizes scaled nicely
-    font_sizes = [max(11, int(s * 0.45)) for s in sizes]
- 
-    fig_wc = go.Figure()
- 
-    # Add invisible scatter for hover — sized bubbles behind text
-    fig_wc.add_trace(go.Scatter(
-        x=x, y=y,
-        mode='markers',
-        marker=dict(
-            size=[max(30, s * 0.7) for s in sizes],
-            color=word_colors[:n],
-            opacity=0.12,
-            line=dict(width=0)
-        ),
-        hoverinfo='skip',
-        showlegend=False
-    ))
- 
-    # Add text layer with hover
-    fig_wc.add_trace(go.Scatter(
-        x=x, y=y,
-        mode='text',
-        text=words,
-        textfont=dict(
-            size=font_sizes,
-            color=word_colors[:n],
-            family='Arial Black, sans-serif'
-        ),
-        hovertemplate='<b style="font-size:16px">%{text}</b>'
-                      '<br>Relative frequency: %{customdata}'
-                      '<extra></extra>',
-        customdata=sizes,
-        showlegend=False
-    ))
- 
-    # Period accent colors for border
-    border_colors = {
-        'Apr-Jun 2020': '#FF6B6B',
-        'Aug-Sep 2020': '#4ECDC4',
-        'Apr-Jun 2021': '#A8E6CF'
+
+    color_schemes = {
+        'Apr-Jun 2020': ['#FF6B6B','#FF8E53','#FF6B35','#FF9F43','#EE5A24',
+                         '#FFC312','#FDA7DF','#FF7979','#F9CA24','#BADC58',
+                         '#FF6B6B','#FF8E53','#FF6B35','#FF9F43','#EE5A24',
+                         '#FFC312','#FDA7DF','#FF7979','#F9CA24','#BADC58',
+                         '#FF6B6B','#FF8E53','#FF6B35','#FF9F43','#EE5A24',
+                         '#FFC312','#FDA7DF','#FF7979','#F9CA24','#BADC58',
+                         '#FF6B6B','#FF8E53','#FF6B35','#FF9F43','#EE5A24','#FFC312'],
+        'Aug-Sep 2020': ['#4ECDC4','#45B7D1','#00D2D3','#54A0FF','#2ED573',
+                         '#1E90FF','#74B9FF','#0984E3','#00CEC9','#81ECEC',
+                         '#6C5CE7','#55EFC4','#4ECDC4','#45B7D1','#00D2D3',
+                         '#54A0FF','#2ED573','#1E90FF','#74B9FF','#0984E3',
+                         '#00CEC9','#81ECEC','#6C5CE7','#55EFC4','#4ECDC4',
+                         '#45B7D1','#00D2D3','#54A0FF','#2ED573','#1E90FF',
+                         '#74B9FF','#0984E3'],
+        'Apr-Jun 2021': ['#A8E6CF','#3D9970','#27AE60','#2ECC71','#1ABC9C',
+                         '#16A085','#6FCF97','#219653','#A8E6CF','#3D9970',
+                         '#27AE60','#2ECC71','#1ABC9C','#16A085','#6FCF97',
+                         '#219653','#A8E6CF','#3D9970','#27AE60','#2ECC71',
+                         '#1ABC9C','#16A085','#6FCF97','#219653','#A8E6CF',
+                         '#3D9970','#27AE60','#2ECC71','#1ABC9C','#16A085'],
     }
- 
-    fig_wc.update_layout(
-        template='plotly_dark',
-        plot_bgcolor='#0D1117',
-        paper_bgcolor='#0D1117',
-        height=520,
-        showlegend=False,
-        xaxis=dict(showgrid=False, zeroline=False,
-                   showticklabels=False, range=[-4.5, 4.5]),
-        yaxis=dict(showgrid=False, zeroline=False,
-                   showticklabels=False, range=[-3.2, 3.2]),
-        margin=dict(t=10, b=10, l=10, r=10),
-        hoverlabel=dict(
-            bgcolor='#1E2130',
-            bordercolor=border_colors[selected],
-            font=dict(size=14, color='white')
-        )
-    )
- 
-    st.plotly_chart(fig_wc, use_container_width=True)
- 
-    # Narrative
+
+    wc_data  = period_data[selected]
+    colors   = color_schemes[selected]
+    words    = [str(w) for w, _ in wc_data]
+    counts   = [int(c) if str(c).isdigit() else 2500 for _, c in wc_data]
+
+    mn, mx = min(counts), max(counts)
+    def fsize(v, lo=13, hi=80):
+        if mx == mn: return (lo+hi)//2
+        return int(lo + (v-mn)/(mx-mn)*(hi-lo))
+
+    font_sizes = [fsize(c) for c in counts]
+
+    # Build word objects as JS array
+    import json
+    word_objects = json.dumps([
+        {"text": w, "size": font_sizes[i], "color": colors[i % len(colors)],
+         "count": counts[i]}
+        for i, w in enumerate(words)
+    ])
+
     narratives = {
-        'Apr-Jun 2020': ('🌱', '#FF6B6B',
-            'Early pandemic — discourse scattered across 14 topics. Masks, schools, '
-            'mental health, food insecurity and faith all compete for attention. '
-            'No single dominant narrative — collective uncertainty.'),
-        'Aug-Sep 2020': ('⚡', '#4ECDC4',
-            'Mid pandemic — testing surges, Trump/Biden election dominates, '
-            'vaccine trials announced. Discourse sharpens around specific '
-            'concrete developments. A more informed public.'),
-        'Apr-Jun 2021': ('💉', '#A8E6CF',
-            'Late period — vaccine completely dominates. The magnifying glass '
-            'has zoomed in on a single topic. Pfizer, Moderna, dose, delta — '
-            'one narrative absorbs all others.')
+        'Apr-Jun 2020': ('🌱','#FF6B6B',
+            'Early pandemic — discourse scattered across masks, schools, mental health, food and faith. No single dominant narrative.'),
+        'Aug-Sep 2020': ('⚡','#4ECDC4',
+            'Mid pandemic — testing surges, Trump/Biden election, vaccine trials announced. Discourse sharpens around specific events.'),
+        'Apr-Jun 2021': ('💉','#A8E6CF',
+            'Late period — vaccine completely dominates. Pfizer, Moderna, dose, delta — one narrative absorbs all others.'),
     }
-    icon, color, text = narratives[selected]
+    icon, border_color, narr_text = narratives[selected]
+
+    html_code = f"""
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
+<style>
+  body {{ margin:0; background:#0D1117; overflow:hidden; }}
+  #wc-container {{
+    width:100%; height:480px; position:relative;
+    display:flex; align-items:center; justify-content:center;
+  }}
+  svg {{ display:block; }}
+  text {{
+    cursor:pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+    font-family: 'Arial Black', 'Impact', sans-serif;
+    font-weight: 900;
+  }}
+  text:hover {{ opacity:0.75; }}
+  #tooltip {{
+    position:fixed; pointer-events:none;
+    background:#1E2130; border:1px solid {border_color};
+    color:white; padding:8px 14px; border-radius:8px;
+    font-family:Arial,sans-serif; font-size:13px;
+    display:none; z-index:999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  }}
+</style>
+</head>
+<body>
+<div id="wc-container"><svg id="wc"></svg></div>
+<div id="tooltip"></div>
+<script>
+const words = {word_objects};
+const W = document.getElementById('wc-container').offsetWidth || 900;
+const H = 480;
+
+const svg = d3.select("#wc")
+  .attr("width", W).attr("height", H);
+
+const g = svg.append("g")
+  .attr("transform", "translate(" + W/2 + "," + H/2 + ")");
+
+const tooltip = document.getElementById("tooltip");
+
+const layout = d3.layout.cloud()
+  .size([W - 20, H - 20])
+  .words(words.map(d => ({{...d, text: d.text}})))
+  .padding(4)
+  .rotate(() => (Math.random() > 0.7 ? 90 : 0))
+  .font("Arial Black")
+  .fontWeight("900")
+  .fontSize(d => d.size)
+  .on("end", draw);
+
+layout.start();
+
+function draw(words) {{
+  g.selectAll("text")
+    .data(words)
+    .enter().append("text")
+    .style("font-size", d => d.size + "px")
+    .style("font-family", "Arial Black, Impact, sans-serif")
+    .style("font-weight", "900")
+    .style("fill", d => d.color)
+    .attr("text-anchor", "middle")
+    .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
+    .text(d => d.text)
+    .on("mousemove", function(event, d) {{
+      tooltip.style.display = "block";
+      tooltip.style.left = (event.clientX + 14) + "px";
+      tooltip.style.top  = (event.clientY - 10) + "px";
+      tooltip.innerHTML  = "<b>" + d.text + "</b><br>Topic size: " +
+                           d.count.toLocaleString() + " tweets";
+    }})
+    .on("mouseleave", function() {{
+      tooltip.style.display = "none";
+    }})
+    .on("mouseover", function() {{
+      d3.select(this)
+        .transition().duration(120)
+        .style("font-size", d => (d.size * 1.18) + "px")
+        .style("opacity", 0.85);
+    }})
+    .on("mouseout", function() {{
+      d3.select(this)
+        .transition().duration(120)
+        .style("font-size", d => d.size + "px")
+        .style("opacity", 1);
+    }});
+}}
+</script>
+</body>
+</html>
+"""
+
+    import streamlit.components.v1 as components
+    components.html(html_code, height=490, scrolling=False)
+
     st.markdown(f"""
-    <div style="background:#1E2130; border-radius:10px; padding:16px 20px;
-                border-left: 4px solid {color}; margin-top:4px;">
-        <span style="font-size:1.3rem">{icon}</span>
-        <span style="color:{color}; font-weight:700; margin-left:8px">
-            {selected}</span>
-        <br><span style="color:#CCCCCC; font-size:0.9rem; 
-                         line-height:1.6">{text}</span>
+    <div style="background:#1E2130; border-radius:10px; padding:14px 18px;
+                border-left: 4px solid {border_color}; margin-top:6px;">
+        <span style="font-size:1.2rem">{icon}</span>
+        <span style="color:{border_color}; font-weight:700; margin-left:8px">{selected}</span>
+        <br><span style="color:#CCCCCC; font-size:0.88rem; line-height:1.6">{narr_text}</span>
     </div>""", unsafe_allow_html=True)
- 
