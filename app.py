@@ -62,7 +62,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("# 🦠 COVID-19 Social Media Analytics VERSION 2")
+st.markdown("# 🦠 COVID-19 Social Media Analytics")
 st.markdown("##### Bhawna Patnaik & Aditya Bhilare · MSc Business Analytics · MS5131")
 st.markdown("---")
 
