@@ -16,7 +16,9 @@ st.set_page_config(
 st.markdown("""
 <style>
   /* ── Global ── */
-  .main .block-container { padding: 1rem 1.5rem 2rem; max-width: 1200px; }
+  /* ── Remove Streamlit top padding ── */
+  .main .block-container { padding-top: 0.5rem !important; }
+  header[data-testid="stHeader"] { display: none !important; }
   section[data-testid="stSidebar"] { display: none; }
 
   /* ── Tabs ── */
@@ -169,7 +171,8 @@ with tab2:
     )
     fig_heat.update_layout(
         plot_bgcolor='#1E2130', paper_bgcolor='#1E2130',
-        margin=dict(t=20,b=20), height=380,
+        margin=dict(t=20,b=20),
+            height=420
         coloraxis_colorbar=dict(title='Avg Compound Score'),
         hoverlabel=dict(bgcolor='#1E2130', font_size=13)
     )
@@ -231,7 +234,7 @@ with tab2:
             height=420
         )
         st.plotly_chart(fig_3d, use_container_width=True)
-        st.caption("💡 Drag to rotate · Scroll to zoom · Click legend to toggle aspects")
+        st.markdown('<div style="color:#666;font-size:0.78rem;margin-top:-10px">💡 Drag to rotate · Scroll to zoom · Click legend to toggle aspects</div>', unsafe_allow_html=True)
 
     with col_r:
         st.markdown('<div class="section-header">RoBERTa Emotion Analysis — Aug-Sep 2020</div>', unsafe_allow_html=True)
