@@ -172,7 +172,7 @@ with tab2:
     fig_heat.update_layout(
         plot_bgcolor='#1E2130', paper_bgcolor='#1E2130',
         margin=dict(t=20,b=20),
-            height=420,
+            height=560,
         coloraxis_colorbar=dict(title='Avg Compound Score'),
         hoverlabel=dict(bgcolor='#1E2130', font_size=13)
     )
