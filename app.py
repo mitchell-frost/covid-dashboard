@@ -169,10 +169,9 @@ with tab2:
         zmin=-0.4, zmax=0.4, text_auto='.3f',
         template='plotly_dark', aspect='auto'
     )
-    fig_heat.update_layout(
+  fig_heat.update_layout(
         plot_bgcolor='#1E2130', paper_bgcolor='#1E2130',
-        margin=dict(t=20,b=20),
-            height=680,
+        margin=dict(t=20,b=20), height=380,
         coloraxis_colorbar=dict(title='Avg Compound Score'),
         hoverlabel=dict(bgcolor='#1E2130', font_size=13)
     )
