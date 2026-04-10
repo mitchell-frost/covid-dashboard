@@ -7,7 +7,7 @@ import json
 import streamlit.components.v1 as components
 
 st.set_page_config(
-    page_title="st.markdown("# 🦠 COVID-19 Social Media Analytics VERSION 2")s",
+    page_title="🦠 COVID-19 Social Media Analytics VERSION 2",
     page_icon="🦠",
     layout="wide",
     initial_sidebar_state="collapsed"
