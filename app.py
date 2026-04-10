@@ -7,7 +7,7 @@ import json
 import streamlit.components.v1 as components
 
 st.set_page_config(
-    page_title="🦠 COVID-19 Social Media Analytics VERSION 2",
+    page_title="COVID-19 Social Media Analytics",
     page_icon="🦠",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -62,7 +62,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("# 🦠 COVID-19 Social Media Analytics")
+st.markdown("# 🦠 COVID-19 Social Media Analytics VERSION 2")
 st.markdown("##### Bhawna Patnaik & Aditya Bhilare · MSc Business Analytics · MS5131")
 st.markdown("---")
 
