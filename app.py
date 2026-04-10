@@ -231,7 +231,7 @@ with tab2:
             ),
             legend=dict(bgcolor='#1E2130', font=dict(size=9)),
             margin=dict(t=20,b=20),
-            height=420
+            height=680
         )
         st.plotly_chart(fig_3d, use_container_width=True)
         st.markdown('<div style="color:#666;font-size:0.78rem;margin-top:-10px">💡 Drag to rotate · Scroll to zoom · Click legend to toggle aspects</div>', unsafe_allow_html=True)
