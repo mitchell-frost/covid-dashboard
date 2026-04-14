@@ -63,7 +63,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown("# 🦠 COVID-19 Social Media Analytics")
-st.markdown("##### Bhawna Patnaik & Aditya Bhilare · MSc Business Analytics · MS5131")
+# st.markdown("##### Bhawna Patnaik & Aditya Bhilare · MSc Business Analytics · MS5131")
 st.markdown("---")
 
 tab1, tab2, tab3, tab4 = st.tabs([
@@ -526,6 +526,6 @@ window.addEventListener("resize", render);
 
 # ── Footer ──────────────────────────────────────────────────────
 st.markdown("---")
-st.markdown('''<div style="text-align:center;color:#555;font-size:0.78rem;padding:8px">
-    Social Media Analytics of COVID-19 Discourse · MS5131 · Bhawna Patnaik & Aditya Bhilare · 1MBY1 MSc Business Analytics
+# st.markdown('''<div style="text-align:center;color:#555;font-size:0.78rem;padding:8px">
+    # Social Media Analytics of COVID-19 Discourse · MS5131 · Bhawna Patnaik & Aditya Bhilare · 1MBY1 MSc Business Analytics
 </div>''', unsafe_allow_html=True)
